@@ -8,10 +8,14 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { CreateUserUseCase } from './usecases/create-user.usecase';
-import { CreateUserDTO, RequestWithUser, UserCreatedDTO } from './dto/user.dto';
-import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
+import { RequestWithUser, UserCreatedDTO } from './dto/user.dto';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { ProfileUserUseCase } from './usecases/profile-user.usecase';
+import {
+  CreateUserResponseSchemaDTO,
+  CreateUserSchemaDTO,
+} from './schemas/create-user.schema';
+import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
 
 @Controller('users')
 export class UserController {
@@ -23,16 +27,25 @@ export class UserController {
   @Post('/')
   @UsePipes(new CreateUserValidationPipe())
   async create(
-    @Body() data: CreateUserDTO,
-  ): Promise<Omit<CreateUserDTO, 'password'>> {
-    return await this.createUserUseCase.execute(data);
+    @Body() data: CreateUserSchemaDTO,
+  ): Promise<CreateUserResponseSchemaDTO | null> {
+    const user = await this.createUserUseCase.execute(data);
+    if (!user) return null;
+    const parsedUser = CreateUserResponseSchemaDTO.safeParse(user);
+
+    if (parsedUser.success) {
+      return parsedUser.data;
+    } else {
+      console.error('Error parsing user:', parsedUser.error);
+      return null;
+    }
   }
 
   @Get('/profile')
   @UseGuards(AuthGuard)
   async profile(
     @Request() req: RequestWithUser,
-  ): Promise<Omit<UserCreatedDTO, 'password'>> {
+  ): Promise<Omit<UserCreatedDTO, 'password'> | null> {
     return await this.profileUserUseCase.execute(req.user.sub);
   }
 }

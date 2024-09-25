@@ -6,8 +6,9 @@ import { UserCreatedDTO } from '../dto/user.dto';
 export class ProfileUserUseCase {
   constructor(private userRepository: IUserRepository) {}
 
-  async execute(id: string): Promise<Omit<UserCreatedDTO, 'password'>> {
+  async execute(id: string): Promise<Omit<UserCreatedDTO, 'password'> | null> {
     const user = await this.userRepository.findById(id);
+    if (!user) return null;
     Reflect.deleteProperty(user, 'password');
     return user;
   }
