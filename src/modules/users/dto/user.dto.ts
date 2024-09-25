@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export type CreateUserDTO = {
   username: string;
   password: string;
@@ -14,3 +16,12 @@ export type UsernameAndEmail = {
   username: string;
   email: string;
 };
+
+export type UserProfile = {
+  user: {
+    sub: string;
+    username: string;
+  };
+};
+
+export type RequestWithUser = Request & UserProfile;

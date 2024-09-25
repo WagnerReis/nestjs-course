@@ -10,7 +10,7 @@ import { LoginController } from './login.controller';
   imports: [
     JwtModule.register({
       global: true,
-      secret: 'NESTJS_COURSE',
+      secret: process.env.JWT_SECRET,
       signOptions: {
         expiresIn: '60s',
       },

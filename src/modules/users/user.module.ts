@@ -4,6 +4,7 @@ import { CreateUserUseCase } from './usecases/create-user.usecase';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { UserPrismaRepository } from './repository/prisma/user.prisma.repository';
 import { IUserRepository } from './repository/user.repository';
+import { ProfileUserUseCase } from './usecases/profile-user.usecase';
 
 @Module({
   imports: [],
@@ -12,6 +13,7 @@ import { IUserRepository } from './repository/user.repository';
     CreateUserUseCase,
     PrismaService,
     UserPrismaRepository,
+    ProfileUserUseCase,
     {
       provide: IUserRepository,
       useClass: UserPrismaRepository,
