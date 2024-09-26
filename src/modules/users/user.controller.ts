@@ -5,7 +5,6 @@ import {
   Post,
   Request,
   UseGuards,
-  UsePipes,
 } from '@nestjs/common';
 import { CreateUserUseCase } from './usecases/create-user.usecase';
 import { RequestWithUser, UserCreatedDTO } from './dto/user.dto';
@@ -15,7 +14,6 @@ import {
   CreateUserResponseSchemaDTO,
   CreateUserSchemaDTO,
 } from './schemas/create-user.schema';
-import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
 
 @Controller('users')
 export class UserController {
@@ -25,20 +23,12 @@ export class UserController {
   ) {}
 
   @Post('/')
-  @UsePipes(new CreateUserValidationPipe())
   async create(
     @Body() data: CreateUserSchemaDTO,
   ): Promise<CreateUserResponseSchemaDTO | null> {
     const user = await this.createUserUseCase.execute(data);
     if (!user) return null;
-    const parsedUser = CreateUserResponseSchemaDTO.safeParse(user);
-
-    if (parsedUser.success) {
-      return parsedUser.data;
-    } else {
-      console.error('Error parsing user:', parsedUser.error);
-      return null;
-    }
+    return CreateUserResponseSchemaDTO.parse(user);
   }
 
   @Get('/profile')
