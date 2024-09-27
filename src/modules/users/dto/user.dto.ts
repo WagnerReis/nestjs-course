@@ -25,3 +25,12 @@ export type UserProfile = {
 };
 
 export type RequestWithUser = Request & UserProfile;
+
+export type FileDTO = {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+};

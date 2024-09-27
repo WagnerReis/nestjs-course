@@ -4,16 +4,19 @@ import {
   Get,
   Post,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserUseCase } from './usecases/create-user.usecase';
-import { RequestWithUser, UserCreatedDTO } from './dto/user.dto';
+import { FileDTO, RequestWithUser, UserCreatedDTO } from './dto/user.dto';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { ProfileUserUseCase } from './usecases/profile-user.usecase';
 import {
   CreateUserResponseSchemaDTO,
   CreateUserSchemaDTO,
 } from './schemas/create-user.schema';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UserController {
@@ -37,5 +40,15 @@ export class UserController {
     @Request() req: RequestWithUser,
   ): Promise<Omit<UserCreatedDTO, 'password'> | null> {
     return await this.profileUserUseCase.execute(req.user.sub);
+  }
+
+  @Post('/avatar')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadAvatar(
+    @Request() req: RequestWithUser,
+    @UploadedFile() file: FileDTO,
+  ) {
+    console.log(file);
   }
 }
