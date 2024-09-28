@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AvatarDTO } from '../dto/user.dto';
 import { IStorage } from 'src/infra/providers/storage/storage';
 import { IUserRepository } from '../repository/user.repository';
+import { extname } from 'path';
 
 @Injectable()
 export class UploadAvatarUserUseCase {
@@ -12,9 +13,12 @@ export class UploadAvatarUserUseCase {
   ) {}
 
   async execute(data: AvatarDTO): Promise<any> {
+    const extFile = extname(data.file.originalname);
+    const transformname = `${data.idUser}${extFile}`;
+    data.file.originalname = transformname;
     this.logger.log(`Uploading file ${data.file.originalname}`);
     const file = await this.supabaseStorage.upload(data.file, 'avatar');
-    this.logger.log(file);
+    await this.userRepository.uploadAvatar(data.idUser, file.data.path);
     return file;
   }
 }

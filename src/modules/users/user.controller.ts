@@ -52,9 +52,8 @@ export class UserController {
     @Request() req: RequestWithUser,
     @UploadedFile() file: FileDTO,
   ) {
-    console.log(file);
     const result = await this.uploadAvatarUseCase.execute({
-      idUser: req.params.sub,
+      idUser: req.user.sub,
       file,
     });
     return result;
