@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { CreateUserDTO } from '../dto/user.dto';
+import { CreateUserDTO, UserCreatedDTO } from '../dto/user.dto';
 import { hash } from 'bcrypt';
 import { IUserRepository } from '../repository/user.repository';
 
@@ -8,7 +8,9 @@ export class CreateUserUseCase {
   private readonly logger = new Logger(CreateUserUseCase.name);
   constructor(private userRepository: IUserRepository) {}
 
-  async execute(data: CreateUserDTO): Promise<Omit<CreateUserDTO, 'password'>> {
+  async execute(
+    data: CreateUserDTO,
+  ): Promise<Omit<UserCreatedDTO, 'password'>> {
     const user = await this.userRepository.findByUsernameOrEmail({
       username: data.username,
       email: data.email,
