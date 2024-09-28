@@ -5,6 +5,9 @@ import { PrismaService } from 'src/infra/database/prisma.service';
 import { UserPrismaRepository } from './repository/prisma/user.prisma.repository';
 import { IUserRepository } from './repository/user.repository';
 import { ProfileUserUseCase } from './usecases/profile-user.usecase';
+import { IStorage } from 'src/infra/providers/storage/storage';
+import { SupabaseStorage } from 'src/infra/providers/storage/storage.supabase';
+import { UploadAvatarUserUseCase } from './usecases/upload-avatar-user.usecase';
 
 @Module({
   imports: [],
@@ -14,9 +17,14 @@ import { ProfileUserUseCase } from './usecases/profile-user.usecase';
     PrismaService,
     UserPrismaRepository,
     ProfileUserUseCase,
+    UploadAvatarUserUseCase,
     {
       provide: IUserRepository,
       useClass: UserPrismaRepository,
+    },
+    {
+      provide: IStorage,
+      useClass: SupabaseStorage,
     },
   ],
 })

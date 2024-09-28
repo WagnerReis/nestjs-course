@@ -34,3 +34,8 @@ export type FileDTO = {
   size: number;
   buffer: Buffer;
 };
+
+export type AvatarDTO = {
+  idUser: string;
+  file: FileDTO;
+};
