@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { CreateUserUseCase } from './usecases/create-user.usecase';
 import { FileDTO, RequestWithUser, UserCreatedDTO } from './dto/user.dto';
-import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { ProfileUserUseCase } from './usecases/profile-user.usecase';
 import {
   CreateUserResponseSchemaDTO,
@@ -19,6 +18,7 @@ import {
 } from './schemas/create-user.schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadAvatarUserUseCase } from './usecases/upload-avatar-user.usecase';
+import { AuthGuard } from '../../infra/providers/auth-guard.provider';
 
 @Controller('users')
 export class UserController {
