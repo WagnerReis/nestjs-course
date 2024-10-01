@@ -3,7 +3,7 @@ import { PrismaService } from 'src/infra/database/prisma.service';
 import { TaskUserController } from './task-user.controller';
 import { CreateTaskUserUseCase } from './useCases/create-task-user.usecase';
 import { ITaskUserRepository } from './repositories/task-user.repository';
-import { TaskUserRepositoy } from './repositories/prisma/task-user.prisma.repository';
+import { TaskUserPrismaRepositoy } from './repositories/prisma/task-user.prisma.repository';
 
 @Module({
   imports: [],
@@ -13,7 +13,7 @@ import { TaskUserRepositoy } from './repositories/prisma/task-user.prisma.reposi
     CreateTaskUserUseCase,
     {
       provide: ITaskUserRepository,
-      useClass: TaskUserRepositoy,
+      useClass: TaskUserPrismaRepositoy,
     },
   ],
   exports: [],
