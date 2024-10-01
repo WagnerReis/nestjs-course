@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AvatarDTO } from '../dto/user.dto';
 import { IUserRepository } from '../repository/user.repository';
 import { extname } from 'path';
-import { IStorage } from '../../..//infra/providers/storage/storage';
+import { IStorage } from '../../../infra/providers/storage/storage';
 
 @Injectable()
 export class UploadAvatarUserUseCase {
