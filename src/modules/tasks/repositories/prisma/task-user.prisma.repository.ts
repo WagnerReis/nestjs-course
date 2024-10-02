@@ -1,5 +1,6 @@
 import { PrismaService } from 'src/infra/database/prisma.service';
 import {
+  TaskUserNotificationDTO,
   TaskUserRequestDTO,
   TaskUserResponseDTO,
 } from '../../dto/task-user.dto';
@@ -33,7 +34,7 @@ export class TaskUserPrismaRepositoy implements ITaskUserRepository {
     });
   }
 
-  async findAllStartDay(): Promise<TaskUserResponseDTO[]> {
+  async findAllStartDay(): Promise<TaskUserNotificationDTO[] | []> {
     const allTasks = await this.prisma.taskUser.findMany({
       where: {
         AND: [
@@ -46,6 +47,10 @@ export class TaskUserPrismaRepositoy implements ITaskUserRepository {
             },
           },
         ],
+      },
+      include: {
+        task: true,
+        user: true,
       },
     });
     return allTasks;

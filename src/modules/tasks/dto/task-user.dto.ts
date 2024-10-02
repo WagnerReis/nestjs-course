@@ -11,3 +11,28 @@ export type TaskUserRequestDTO = {
 export type TaskUserResponseDTO = {
   id: string;
 };
+
+type TaskDTO = {
+  title: string;
+  description: string;
+  startAt: Date;
+  endAt: Date;
+};
+
+type UserDTO = {
+  id: string;
+  username: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+  avatarUrl: string | null;
+};
+
+export type TaskUserNotificationDTO = {
+  id: string;
+  userId: string;
+  taskId: string;
+  createdAt: Date;
+  task: TaskDTO;
+  user: UserDTO;
+};
