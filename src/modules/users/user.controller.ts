@@ -21,7 +21,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadAvatarUserUseCase } from './usecases/upload-avatar-user.usecase';
 import { AuthGuard } from '../../infra/providers/auth-guard.provider';
 import { zodToOpenAPI } from 'nestjs-zod';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 const schemaUserSwagger = zodToOpenAPI(CreateUserSchema);
 
@@ -72,6 +78,19 @@ export class UserController {
   @Put('/avatar')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   async uploadAvatar(
     @Request() req: RequestWithUser,
     @UploadedFile() file: FileDTO,
