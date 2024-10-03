@@ -14,13 +14,19 @@ import { FileDTO, RequestWithUser, UserCreatedDTO } from './dto/user.dto';
 import { ProfileUserUseCase } from './usecases/profile-user.usecase';
 import {
   CreateUserResponseSchemaDTO,
+  CreateUserSchema,
   CreateUserSchemaDTO,
 } from './schemas/create-user.schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadAvatarUserUseCase } from './usecases/upload-avatar-user.usecase';
 import { AuthGuard } from '../../infra/providers/auth-guard.provider';
+import { zodToOpenAPI } from 'nestjs-zod';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+const schemaUserSwagger = zodToOpenAPI(CreateUserSchema);
 
 @Controller('users')
+@ApiTags('users')
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
@@ -29,6 +35,15 @@ export class UserController {
   ) {}
 
   @Post('/')
+  @ApiBody({
+    schema: schemaUserSwagger,
+    description: 'Create a new user',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'User created!',
+  })
+  @ApiResponse({ status: 400, description: 'User already exists!' })
   async create(
     @Body() data: CreateUserSchemaDTO,
   ): Promise<CreateUserResponseSchemaDTO | null> {
