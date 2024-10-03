@@ -21,7 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadAvatarUserUseCase } from './usecases/upload-avatar-user.usecase';
 import { AuthGuard } from '../../infra/providers/auth-guard.provider';
 import { zodToOpenAPI } from 'nestjs-zod';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 const schemaUserSwagger = zodToOpenAPI(CreateUserSchema);
 
@@ -54,6 +54,15 @@ export class UserController {
 
   @Get('/profile')
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User profile',
+  })
   async profile(
     @Request() req: RequestWithUser,
   ): Promise<Omit<UserCreatedDTO, 'password'> | null> {
